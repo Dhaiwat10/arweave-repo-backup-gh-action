@@ -1,0 +1,6 @@
+.env
+node_modules
+dist
+test-folder.zip
+test-folder/node_modules
+wallet.json
