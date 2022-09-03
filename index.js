@@ -38,6 +38,8 @@ const main = async () => {
   const blob = Buffer.from(base64string, 'base64');
   console.log(`repo.zip is ${blob.length / 1000000.0} MB`);
 
+  console.log('before tx');
+
   // create an arweave transaction with the base64 blob
   const transaction = await arweave.createTransaction(
     {
@@ -45,6 +47,8 @@ const main = async () => {
     },
     key
   );
+
+  console.log('after tx', transaction);
 
   transaction.addTag('Content-Type', 'application/zip');
   transaction.addTag('App-Name', 'arweave-repo-backup');
