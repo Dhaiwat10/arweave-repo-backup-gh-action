@@ -7,7 +7,7 @@ jobs:
     steps:
       - name: Backup
         id: backup
-        uses: dhaiwat10/arweave-repo-backup-gh-action@v0.6
+        uses: dhaiwat10/arweave-repo-backup-gh-action@v0.7
         with:
           arweaveWalletKey: 'Test'
       # Use the output from the `hello` step
