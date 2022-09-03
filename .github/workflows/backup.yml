@@ -7,9 +7,8 @@ jobs:
     steps:
       - name: Backup
         id: backup
-        uses: dhaiwat10/arweave-repo-backup-gh-action@v0.9
+        uses: dhaiwat10/arweave-repo-backup-gh-action@v0.10
         with:
           arweaveWalletKey: ${{ secrets.ARWEAVE_WALLET_KEY }}
-      # Use the output from the `hello` step
-      # - name: Get the output time
-      #   run: echo "The time was ${{ steps.hello.outputs.time }}"
+      - name: Log the TX ID
+        run: echo "The TX ID is ${{ steps.backup.outputs.txId }}"

@@ -14,54 +14,51 @@ const arweave = Arweave.init({
   logging: false, // Enable network request logging});
 });
 
-// const main = async () => {
-//   const repoOwner = github.context.repo.owner;
-//   const repoName = github.context.repo.repo;
-
-//   const repo = await fetch(
-//     `https://api.github.com/repos/${repoOwner}/${repoName}/zipball`
-//   );
-
-//   const repoBuffer = await repo.buffer();
-//   fs.writeFileSync('repo.zip', repoBuffer);
-
-//   // // // convert the zip to base64 blob
-//   // const base64string = fs.readFileSync(path.resolve('./repo.zip'), {
-//   //   encoding: 'base64',
-//   // });
-
-//   // // convert the base64 string to a blob
-//   // const blob = Buffer.from(base64string, 'base64');
-//   // console.log(`repo.zip is ${blob.length / 1000000.0} MB`);
-
-//   // // create an arweave transaction with the base64 blob
-//   // const transaction = await arweave.createTransaction(
-//   //   {
-//   //     data: blob,
-//   //   },
-//   //   key
-//   // );
-
-//   // transaction.addTag('Content-Type', 'application/zip');
-//   // transaction.addTag('App-Name', 'arweave-repo-backup');
-
-//   // // sign the transaction with the wallet
-//   // await arweave.transactions.sign(transaction, key);
-
-//   // // send the transaction to the network
-//   // const res = await arweave.transactions.post(transaction);
-//   // console.log(res);
-
-//   // const txId = transaction.id;
-//   // console.log('TX ID:', txId);
-// };
-
-const testFn = async () => {
+const main = async () => {
   core.setSecret(core.getInput('arweaveWalletKey'));
-  console.log({
-    owner: github.context.repo.owner,
-    repo: github.context.repo.repo,
+  const key = core.getInput('arweaveWalletKey');
+
+  const repoOwner = github.context.repo.owner;
+  const repoName = github.context.repo.repo;
+
+  const repo = await fetch(
+    `https://api.github.com/repos/${repoOwner}/${repoName}/zipball`
+  );
+
+  const repoBuffer = await repo.buffer();
+  fs.writeFileSync('./repo.zip', repoBuffer);
+
+  // // convert the zip to base64 blob
+  const base64string = fs.readFileSync(path.resolve('./repo.zip'), {
+    encoding: 'base64',
   });
+
+  // convert the base64 string to a blob
+  const blob = Buffer.from(base64string, 'base64');
+  console.log(`repo.zip is ${blob.length / 1000000.0} MB`);
+
+  // create an arweave transaction with the base64 blob
+  const transaction = await arweave.createTransaction(
+    {
+      data: blob,
+    },
+    key
+  );
+
+  transaction.addTag('Content-Type', 'application/zip');
+  transaction.addTag('App-Name', 'arweave-repo-backup');
+
+  // sign the transaction with the wallet
+  await arweave.transactions.sign(transaction, key);
+
+  // send the transaction to the network
+  const res = await arweave.transactions.post(transaction);
+  console.log(res);
+
+  const txId = transaction.id;
+  console.log('TX ID:', txId);
+
+  core.setOutput('txId', txId);
 };
 
-testFn();
+main();
