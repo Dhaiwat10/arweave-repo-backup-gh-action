@@ -32696,6 +32696,8 @@ const main = async () => {
   (0,core.setSecret)((0,core.getInput)('arweaveWalletKey'));
   const key = (0,core.getInput)('arweaveWalletKey');
 
+  console.log('Key length', key.length);
+
   const repoOwner = github.context.repo.owner;
   const repoName = github.context.repo.repo;
 
