@@ -84,8 +84,11 @@ const main = async () => {
 // main();
 
 const testFn = async () => {
+  core.setSecret('arweaveWalletKey');
   console.log({
     owner: github.context.repo.owner,
     repo: github.context.repo.repo,
   });
 };
+
+testFn();
