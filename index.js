@@ -1,12 +1,11 @@
-const core = require('@actions/core');
-const github = require('@actions/github');
-const fetch = require('node-fetch');
-const fs = require('fs');
-const path = require('path');
-const Arweave = require('arweave');
-const archiver = require('archiver');
+import { setSecret, getInput, setOutput } from '@actions/core';
+import { context } from '@actions/github';
+import fetch from 'node-fetch';
+import { writeFileSync, readFileSync } from 'fs';
+import { resolve } from 'path';
+import { init } from 'arweave';
 
-const arweave = Arweave.init({
+const arweave = init({
   host: 'arweave.net', // Hostname or IP address for a Arweave host
   port: 443, // Port
   protocol: 'https', // Network protocol http or https
@@ -15,21 +14,21 @@ const arweave = Arweave.init({
 });
 
 const main = async () => {
-  core.setSecret(core.getInput('arweaveWalletKey'));
-  const key = core.getInput('arweaveWalletKey');
+  setSecret(getInput('arweaveWalletKey'));
+  const key = getInput('arweaveWalletKey');
 
-  const repoOwner = github.context.repo.owner;
-  const repoName = github.context.repo.repo;
+  const repoOwner = context.repo.owner;
+  const repoName = context.repo.repo;
 
   const repo = await fetch(
     `https://api.github.com/repos/${repoOwner}/${repoName}/zipball`
   );
 
   const repoBuffer = await repo.buffer();
-  fs.writeFileSync('./repo.zip', repoBuffer);
+  writeFileSync('./repo.zip', repoBuffer);
 
   // // convert the zip to base64 blob
-  const base64string = fs.readFileSync(path.resolve('./repo.zip'), {
+  const base64string = readFileSync(resolve('./repo.zip'), {
     encoding: 'base64',
   });
 
@@ -58,7 +57,7 @@ const main = async () => {
   const txId = transaction.id;
   console.log('TX ID:', txId);
 
-  core.setOutput('txId', txId);
+  setOutput('txId', txId);
 };
 
 main();
