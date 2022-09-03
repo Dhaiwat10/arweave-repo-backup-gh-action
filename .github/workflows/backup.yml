@@ -1,0 +1,15 @@
+on: [push]
+
+jobs:
+  backup_job:
+    runs-on: ubuntu-latest
+    name: Backup source code to Arweave
+    steps:
+      - name: Backup
+        id: backup
+        uses: dhaiwat10/arweave-repo-backup-gh-action@v0.1
+        with:
+          arweaveWalletKey: 'Test'
+      # Use the output from the `hello` step
+      # - name: Get the output time
+      #   run: echo "The time was ${{ steps.hello.outputs.time }}"
