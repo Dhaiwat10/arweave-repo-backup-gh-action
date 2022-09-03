@@ -3,6 +3,9 @@ import path from 'path';
 import archiver from 'archiver';
 import key from './wallet.json';
 import Arweave from 'arweave';
+import fetch from 'node-fetch';
+import core from '@actions/core';
+import github from '@actions/github';
 
 const arweave = Arweave.init({
   host: 'arweave.net', // Hostname or IP address for a Arweave host
@@ -37,17 +40,24 @@ const getLoadedArweaveWalletBalance = async () => {
 };
 
 const main = async () => {
-  // read files from the test-folder directory and zip the files together
-  await zipDirectory('./test-folder', './test-folder.zip');
+  // Download the contents of the Github repo at https://github.com/dhaiwat10/create-web3-frontend to a folder called 'repo' using the Github API
+  const repo = await fetch(
+    'https://api.github.com/repos/dhaiwat10/create-web3-frontend/zipball'
+  );
 
-  // convert the zip to base64 blob
-  const base64string = fs.readFileSync(path.resolve('./test-folder.zip'), {
+  github.context.repo.owner;
+
+  const repoBuffer = await repo.buffer();
+  fs.writeFileSync('repo.zip', repoBuffer);
+
+  // // convert the zip to base64 blob
+  const base64string = fs.readFileSync(path.resolve('./repo.zip'), {
     encoding: 'base64',
   });
 
   // convert the base64 string to a blob
   const blob = Buffer.from(base64string, 'base64');
-  console.log(`test-folder.zip is ${blob.length / 1000000.0} MB`);
+  console.log(`repo.zip is ${blob.length / 1000000.0} MB`);
 
   // create an arweave transaction with the base64 blob
   const transaction = await arweave.createTransaction(
@@ -58,7 +68,7 @@ const main = async () => {
   );
 
   transaction.addTag('Content-Type', 'application/zip');
-  transaction.addTag('App-Name', 'vitalik.eth');
+  transaction.addTag('App-Name', 'arweave-repo-backup');
 
   // sign the transaction with the wallet
   await arweave.transactions.sign(transaction, key);
@@ -71,4 +81,11 @@ const main = async () => {
   console.log('TX ID:', txId);
 };
 
-main();
+// main();
+
+const testFn = async () => {
+  console.log({
+    owner: github.context.repo.owner,
+    repo: github.context.repo.repo,
+  });
+};

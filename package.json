@@ -13,10 +13,13 @@
   "author": "Dhaiwat Pandya",
   "license": "ISC",
   "dependencies": {
+    "@actions/core": "^1.9.1",
+    "@actions/github": "^5.0.3",
     "archiver": "^5.3.1",
     "arweave": "^1.11.6",
     "i": "^0.3.7",
-    "jszip": "^3.10.1"
+    "jszip": "^3.10.1",
+    "node-fetch": "^3.2.10"
   },
   "devDependencies": {
     "@types/archiver": "^5.3.1",

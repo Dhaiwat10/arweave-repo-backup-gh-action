@@ -1,0 +1,12 @@
+name: 'Repo backup to Arweave'
+description: 'This action takes a copy of your repo and pushes it to Arweave.'
+inputs:
+  arweaveWalletKey:
+    description: 'Your Arweave wallet's private key.'
+    required: true
+outputs:
+  txId:
+    description: 'Arweave transaction ID of the the copy of your source code pushed to Arweave'
+runs:
+  using: 'node16'
+  main: 'dist/index.js'

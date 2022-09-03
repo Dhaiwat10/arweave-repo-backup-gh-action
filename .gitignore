@@ -4,3 +4,4 @@ dist
 test-folder.zip
 test-folder/node_modules
 wallet.json
+*.zip
