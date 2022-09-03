@@ -9,4 +9,4 @@ outputs:
     description: 'Arweave transaction ID of the the copy of your source code pushed to Arweave'
 runs:
   using: 'node16'
-  main: './index.js'
+  main: 'dist/index.js'
